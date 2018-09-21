@@ -1,4 +1,7 @@
+const path = require('path')
+const webpack = require('webpack')
 const isDev = process.env.NODE_ENV === 'development'
+const port = process.env.PORT || 3000
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
@@ -7,11 +10,21 @@ module.exports = {
     './client/index.js'
   ],
   output: {
-    path: __dirname,
-    filename: './public/bundle.js'
+    path: path.resolve(__dirname, 'public'),
+    filename: 'bundle.js'
   },
   resolve: {
     extensions: ['.js', '.jsx']
+  },
+  devServer: {
+    hot: true,
+    contentBase: path.resolve(__dirname, 'public'),
+    proxy: {
+      '^/api/*': {
+        target: `http://localhost:${port}/api/`,
+        secure: false
+      }
+    }
   },
   devtool: 'source-map',
   module: {
@@ -20,7 +33,15 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin()
+  ]
 }
