@@ -6,6 +6,7 @@ import {
   Login,
   Signup,
   UserHome,
+  Account,
   Landing,
   MyMantras,
   DailyMantra,
@@ -32,7 +33,7 @@ class Routes extends Component {
         <Route exact path="/mod" component={DailyMantra} />
         <Route exact path="/mantras" component={MyMantras} />
         <Route exact path="/discover" component={Discover} />
-        {/* <Route path="/account" component={Account} /> */}
+        <Route path="/account" component={Account} />
         {/* <Route path="/browse" component={Browse} /> */}
         {/* <Route component={Login} /> */}
       </Switch>

@@ -119,6 +119,16 @@ const trainNetwork = async () => {
   })
 }
 
+// trainNetwork()
+
+module.exports = {
+  trainNetwork,
+  fetchQuote,
+  fetchQuoteById,
+  updateQuote
+  // userTesting
+}
+
 // const userTesting = ({feature, sentimentScore, response}) => {
 //   const learningRate = 0.05
 //   const myNetwork = synaptic.Network.fromJSON(require('./myNetwork.json'))
@@ -135,13 +145,3 @@ const trainNetwork = async () => {
 //     console.log('The file has been saved!')
 //   })
 // }
-
-// trainNetwork()
-
-module.exports = {
-  trainNetwork,
-  fetchQuote,
-  fetchQuoteById,
-  updateQuote
-  // userTesting
-}
