@@ -16,24 +16,30 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
+  node: {
+    fs: 'empty'
+  },
   devServer: {
     hot: true,
     contentBase: path.resolve(__dirname, 'public'),
     historyApiFallback: true,
-    port: 3000
-    // proxy: {
-    //   '^/api/*': {
-    //     target: `http://localhost:${port}/api/`,
-    //     secure: false
-    //   }
-    // }
+    port: 3000,
+    headers: {
+      'Access-Control-Allow-Origin': 'http://localhost:3000'
+    },
+    proxy: {
+      '^/api/*': {
+        target: `http://localhost:${port}/api/`,
+        secure: false
+      }
+    }
   },
   devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, path.resolve(__dirname, 'quoteTrainer.js')],
         loader: 'babel-loader'
       },
       {

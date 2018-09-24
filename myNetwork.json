@@ -1,0 +1,75 @@
+{
+  "neurons": [
+    {
+      "trace": {"elegibility": {}, "extended": {}},
+      "state": 0,
+      "old": 0,
+      "activation": 0,
+      "bias": 0,
+      "layer": 0,
+      "squash": "LOGISTIC"
+    },
+    {
+      "trace": {"elegibility": {}, "extended": {}},
+      "state": 0,
+      "old": 0,
+      "activation": 0,
+      "bias": 0,
+      "layer": 0,
+      "squash": "LOGISTIC"
+    },
+    {
+      "trace": {"elegibility": {}, "extended": {}},
+      "state": 0,
+      "old": 0,
+      "activation": 0,
+      "bias": 0,
+      "layer": 0,
+      "squash": "LOGISTIC"
+    },
+    {
+      "trace": {"elegibility": {}, "extended": {}},
+      "state": 0,
+      "old": 0,
+      "activation": 0,
+      "bias": 0,
+      "layer": 0,
+      "squash": "LOGISTIC"
+    },
+    {
+      "trace": {"elegibility": {}, "extended": {}},
+      "state": 0,
+      "old": 0,
+      "activation": 0,
+      "bias": 0,
+      "layer": 0,
+      "squash": "LOGISTIC"
+    },
+    {
+      "trace": {"elegibility": {}, "extended": {}},
+      "state": 0,
+      "old": 0,
+      "activation": 0,
+      "bias": 0,
+      "layer": 0,
+      "squash": "LOGISTIC"
+    },
+    {
+      "trace": {"elegibility": {}, "extended": {}},
+      "state": -1.8656868660311783,
+      "old": -1.8589455659225107,
+      "activation": 0.1340415773530378,
+      "bias": -1.8656868660311783,
+      "layer": "output",
+      "squash": "LOGISTIC"
+    }
+  ],
+  "connections": [
+    {"from": 0, "to": 6, "weight": -0.07670035986390654, "gater": null},
+    {"from": 1, "to": 6, "weight": -0.06788049839540539, "gater": null},
+    {"from": 2, "to": 6, "weight": -0.04907260473742743, "gater": null},
+    {"from": 3, "to": 6, "weight": -0.07348911657990609, "gater": null},
+    {"from": 4, "to": 6, "weight": -0.07742192183097135, "gater": null},
+    {"from": 5, "to": 6, "weight": 0.0017253267956336416, "gater": null}
+  ]
+}

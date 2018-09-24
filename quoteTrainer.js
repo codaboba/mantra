@@ -1,8 +1,23 @@
 const synaptic = require('synaptic')
 const axios = require('axios')
+const fs = require('fs')
 
-const Trainer = synaptic.Trainer,
+const Network = synaptic.Network,
+  Trainer = synaptic.Trainer,
   Architect = synaptic.Architect
+
+const fetchQuoteById = async quoteId => {
+  const PORT = process.env.PORT || 8080
+  try {
+    const {data} = await axios({
+      method: 'get',
+      url: `http://localhost:${PORT}/api/quotes/${quoteId}`
+    })
+    return data
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 const fetchQuote = async route => {
   const PORT = process.env.PORT || 8080
@@ -24,6 +39,7 @@ const updateQuote = async quoteId => {
       method: 'put',
       url: `http://localhost:${PORT}/api/quotes/${quoteId}`
     })
+    console.log('Quote has been used:', data.quote)
   } catch (err) {
     console.error(err)
   }
@@ -33,24 +49,25 @@ const saveTrainer = async trainer => {
   console.log('before hitting /trainer route')
   const PORT = process.env.PORT || 8080
   try {
-    await axios({
+    const savedTrainer = await axios({
       method: 'post',
+      headers: {'content-type': 'application/json'},
       url: `http://localhost:${PORT}/api/quotes/trainer`,
       data: {trainer}
     })
     console.log('Trainer successfully saved')
+    return savedTrainer
   } catch (err) {
     console.error(err)
   }
 }
 
-const train = async () => {
+const trainNetwork = async () => {
   const trainingSet = async likeOrDislike => {
     try {
       const data = await fetchQuote(likeOrDislike)
       let {quote, feature, sentimentScore} = data
-      console.log('** QUOTE **', quote)
-      await updateQuote(quote.id)
+      // await updateQuote(quote.id)
 
       return [
         {
@@ -65,7 +82,7 @@ const train = async () => {
 
   let myNetwork
 
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 10; i++) {
     const likeTrainingSet = trainingSet('like')
     const dislikeTrainingSet = trainingSet('dislike')
 
@@ -73,16 +90,20 @@ const train = async () => {
       try {
         const data = await fetchQuote('like')
         let {feature} = data
-        return feature.length
+        return feature.length + 1
       } catch (err) {
         console.error(err)
       }
     }
 
     const input = await inputLength
-    myNetwork = new Architect.Perceptron(input, 6, 1)
+
+    myNetwork =
+      Network.fromJSON(require('./myNetwork.json')) ||
+      new Architect.Perceptron(input, 6, 1)
+
     const trainer = new Trainer(myNetwork)
-    const options = {rate: 0.05, iterations: 200}
+    const options = {rate: 0.05, iterations: 20}
     trainer.train(await likeTrainingSet, options)
     const likeError = trainer.test(await likeTrainingSet).error
     console.log(`Training error ---> Like Error: ${likeError}`)
@@ -92,13 +113,35 @@ const train = async () => {
     console.log(`Training error ---> Dislike Error: ${dislikeError}`)
   }
 
-  const trainedNetwork = myNetwork.toJSON()
-  // await saveTrainer(trainedNetwork)
-  return trainedNetwork
+  fs.writeFile('myNetwork.json', JSON.stringify(myNetwork.toJSON()), err => {
+    if (err) throw err
+    console.log('The file has been saved!')
+  })
 }
 
-const trainedNetwork = train().then(data => data)
+// const userTesting = ({feature, sentimentScore, response}) => {
+//   const learningRate = 0.05
+//   const myNetwork = synaptic.Network.fromJSON(require('./myNetwork.json'))
+//   const network = Network.fromJSON(myNetwork)
 
-// console.log('** TRAINED NETWORK **', trainedNetwork)
+//   const beforeBackprop = network.activate([...feature, sentimentScore])
+//   network.propagate(learningRate, [response])
+//   console.log('** OUTPUT BEFORE BACKPROPAGATION **', beforeBackprop)
 
-module.exports = trainedNetwork
+//   const afterBackprop = network.activate([...feature, sentimentScore])
+//   console.log('** OUTPUT AFTER BACKPROP**', afterBackprop)
+//   fs.writeFile('myNetwork.json', JSON.stringify(myNetwork.toJSON()), err => {
+//     if (err) throw err
+//     console.log('The file has been saved!')
+//   })
+// }
+
+// trainNetwork()
+
+module.exports = {
+  trainNetwork,
+  fetchQuote,
+  fetchQuoteById,
+  updateQuote
+  // userTesting
+}

@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography'
 
 const Discover = props => {
   return (
-    <div className="discover">
+    <div className="discover container">
       <Typography variant="display1">Discover</Typography>
     </div>
   )

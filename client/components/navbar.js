@@ -1,6 +1,5 @@
 import React from 'react'
 // import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
 // import {Link} from 'react-router-dom'
 // import {logout} from '../store'
 import {withRouter} from 'react-router-dom'
@@ -11,7 +10,6 @@ import Bookmark from '@material-ui/icons/Bookmark'
 import Person from '@material-ui/icons/Person'
 import Search from '@material-ui/icons/Search'
 import Home from '@material-ui/icons/Home'
-import {getHeader} from '../store'
 
 const styles = {
   stickToBottom: {
@@ -28,8 +26,12 @@ class Navbar extends React.Component {
 
   handleChange = (event, value) => {
     this.setState({value})
-    this.props.getHeader(value)
     this.props.history.push(`/${value}`)
+  }
+
+  componentDidMount() {
+    const value = this.props.location.pathname.slice(1)
+    this.setState({value})
   }
 
   render() {
@@ -64,15 +66,7 @@ class Navbar extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  getHeader: value => dispatch(getHeader(value))
-})
-
-// const mapStateToProps = state => ({header: state.header})
-
-const StyledNavbar = withRouter(
-  withStyles(styles)(connect(null, mapDispatchToProps)(Navbar))
-)
+const StyledNavbar = withRouter(withStyles(styles)(Navbar))
 
 // const mapState = state => {
 //   return {

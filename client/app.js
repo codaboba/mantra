@@ -7,9 +7,9 @@ const App = () => {
   return (
     <div>
       <CssBaseline />
-      {/* <Header /> */}
-      <Navbar />
+      <Header />
       <Routes />
+      <Navbar />
     </div>
   )
 }

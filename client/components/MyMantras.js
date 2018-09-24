@@ -8,7 +8,8 @@ import Typography from '@material-ui/core/Typography'
 
 const styles = {
   card: {
-    minWidth: 275
+    minWidth: 275,
+    marginBottom: '20px'
   },
   bullet: {
     display: 'inline-block',
@@ -26,12 +27,12 @@ const styles = {
 
 const MyMantras = ({classes}) => {
   return (
-    <div>
+    <div className="container list">
       {/* lists that expand into card and shows the date of the quote */}
       <Card className={classes.card}>
         <CardContent>
           <Typography className={classes.title} color="textSecondary">
-            September 1, 2018
+            September 23, 2018
           </Typography>
           <Typography component="p">
             Life is the childhood of our immortality.
@@ -41,10 +42,11 @@ const MyMantras = ({classes}) => {
       <Card className={classes.card}>
         <CardContent>
           <Typography className={classes.title} color="textSecondary">
-            September 1, 2018
+            September 24, 2018
           </Typography>
           <Typography component="p">
-            Life is the childhood of our immortality.
+            Wisdom is the reward you get for a lifetime of listening when you'd
+            have preferred to talk.
           </Typography>
         </CardContent>
       </Card>

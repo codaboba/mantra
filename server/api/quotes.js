@@ -12,7 +12,7 @@ router.get('/like', async (req, res, next) => {
     const keywords = quote.getKeywords()
     const feature = await quote.getFeature(keywords)
     const sentimentScore = quote.getSentimentScore()
-    res.json({quote, keywords, feature, sentimentScore})
+    res.send({quote, keywords, feature, sentimentScore})
   } catch (err) {
     next(err)
   }
@@ -35,8 +35,7 @@ router.get('/dislike', async (req, res, next) => {
 router.post('/trainer', async (req, res, next) => {
   try {
     const savedTrainer = await Trainer.create(req.body.trainer)
-    console.log('** SAVED TRAINER **', savedTrainer)
-    res.status(201).end()
+    res.status(201).json(savedTrainer)
   } catch (err) {
     next(err)
   }
@@ -45,7 +44,10 @@ router.post('/trainer', async (req, res, next) => {
 router.get('/:quoteId', async (req, res, next) => {
   try {
     const quote = await Quote.findById(req.params.quoteId)
-    res.json(quote)
+    const keywords = quote.getKeywords()
+    const feature = await quote.getFeature(keywords)
+    const sentimentScore = quote.getSentimentScore()
+    res.json({quote, keywords, feature, sentimentScore})
   } catch (err) {
     next(err)
   }
