@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const isDev = process.env.NODE_ENV === 'development'
-const port = process.env.PORT || 3000
+const port = 3000
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
@@ -19,12 +19,14 @@ module.exports = {
   devServer: {
     hot: true,
     contentBase: path.resolve(__dirname, 'public'),
-    proxy: {
-      '^/api/*': {
-        target: `http://localhost:${port}/api/`,
-        secure: false
-      }
-    }
+    historyApiFallback: true,
+    port: 3000
+    // proxy: {
+    //   '^/api/*': {
+    //     target: `http://localhost:${port}/api/`,
+    //     secure: false
+    //   }
+    // }
   },
   devtool: 'source-map',
   module: {

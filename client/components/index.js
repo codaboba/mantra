@@ -3,6 +3,11 @@
  * This way, we can import all of our components from the same place, rather than
  * having to figure out which file they belong to!
  */
+export {default as Header} from './Header'
 export {default as Navbar} from './navbar'
 export {default as UserHome} from './user-home'
 export {Login, Signup} from './auth-form'
+export {default as MyMantras} from './MyMantras'
+export {default as DailyMantra} from './DailyMantra'
+export {default as Landing} from './Landing'
+export {default as Discover} from './Discover'
