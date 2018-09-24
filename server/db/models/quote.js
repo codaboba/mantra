@@ -1,6 +1,7 @@
 const db = require('../db')
 const keywordExtractor = require('keyword-extractor')
 const natural = require('natural')
+const dedupe = require('dedupe')
 const Keyword = require('./keyword')
 const Sequelize = require('sequelize')
 const Sentiment = require('sentiment')
@@ -11,7 +12,8 @@ const Quote = db.define('quote', {
     allowNull: false,
     validate: {
       notEmpty: true
-    }
+    },
+    unique: true
   },
   author: {
     type: Sequelize.STRING,
@@ -22,32 +24,38 @@ const Quote = db.define('quote', {
     }
   },
   likeBool: {
-    type: Sequelize.ENUM,
+    type: Sequelize.INTEGER,
     defaultValue: 0,
-    values: [0, 1]
+    validate: {
+      min: 0,
+      max: 1
+    }
   },
   usedBool: {
-    type: Sequelize.ENUM,
+    type: Sequelize.INTEGER,
     defaultValue: 0,
-    values: [0, 1]
+    validate: {
+      min: 0,
+      max: 1
+    }
   }
 })
 
 Quote.prototype.getSentimentScore = function() {
   const sentiment = new Sentiment()
-  this.setDataValue(sentiment.analyze(this.getDataValue('quote')))
+  return sentiment.analyze(this.getDataValue('quote'))
 }
 
 Quote.prototype.getKeywords = function() {
   const keywords = keywordExtractor.extract(this.getDataValue('quote'), {
     language: 'english',
     remove_digits: true,
-    return_changed_case: true,
-    remove_duplicates: false
+    return_changed_case: true
   })
-  const stemmedKeywords = keywords.map(word => natural.PorterStemmer.stem(word))
-  console.log('Quote has successfully been tokenized:', stemmedKeywords)
-  this.setDataValue(stemmedKeywords)
+  const stemmedKeywords = dedupe(
+    keywords.map(word => natural.PorterStemmer.stem(word))
+  )
+  return stemmedKeywords
 }
 
 Quote.prototype.getFeature = async function(keywordsArray) {
@@ -56,12 +64,11 @@ Quote.prototype.getFeature = async function(keywordsArray) {
     const feature = []
     for (let i = 0; i < allKeywords.length; i++) {
       const tokenExists = keywordsArray.some(
-        keyword => keyword === allKeywords(i).keyword
+        keyword => keyword === allKeywords[i].keyword
       )
       const value = tokenExists ? 1 : 0
       feature.push(value)
     }
-    console.log('Feature has been successfully created:', feature)
     return feature
   } catch (err) {
     console.error(err)
@@ -69,9 +76,13 @@ Quote.prototype.getFeature = async function(keywordsArray) {
 }
 
 Quote.afterCreate(async quote => {
-  const tokens = quote.getDataValue('keywords')
+  const tokens = await quote.getKeywords()
   for (let i = 0; i < tokens.length; i++) {
-    await Keyword.findOrCreate(tokens[i])
+    await Keyword.findOrCreate({
+      where: {
+        keyword: tokens[i]
+      }
+    })
   }
 })
 

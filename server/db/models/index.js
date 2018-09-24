@@ -1,6 +1,7 @@
 const User = require('./user')
 const Quote = require('./quote')
 const Keyword = require('./keyword')
+const Trainer = require('./trainer')
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -18,5 +19,6 @@ const Keyword = require('./keyword')
 module.exports = {
   User,
   Quote,
-  Keyword
+  Keyword,
+  Trainer
 }
